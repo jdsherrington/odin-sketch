@@ -1,0 +1,237 @@
+* {
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+    user-select: none;
+}
+
+body {
+    background-color: #EEE;
+}
+
+#sketchpad {
+    margin: 0.5em;
+    margin-bottom: 0em;
+    display: grid;
+    width: 500px;
+    height: 500px;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    border: black 5px solid;
+    z-index: 1;
+    background-color: white;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+#details {
+    margin: 0;
+    display: flex;
+    gap: 0.25em;
+    align-items: center;
+    justify-content: center;
+    width: 500px;
+    height: auto;
+    margin-top: 0.5em;
+    margin-left: 0.5em;
+    background-color: white;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    border: black 5px solid;
+    border-radius: 15px;
+}
+
+.pixel {
+    width: 100%;
+    transition: background-color 200ms;
+    border: #eee 0.5px solid;
+    z-index: 2;
+    
+}
+
+#fillBtn {
+    width: 7em;
+    height: 2em;
+    background-color: dodgerblue;
+    font-weight: 900;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: all 200ms;
+    cursor: pointer;
+}
+
+#fillBtn:hover {
+    width: 7em;
+    height: 2em;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: all 200ms;
+}
+
+#fillBtn:active {
+    width: 7em;
+    height: 2em;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: all 200ms;
+}
+
+#gridSize {
+    width: 4em;
+    height: 2em;
+    background-color: #ccc;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    user-select: auto;
+}
+
+#gridSizeLabel {
+    font-weight: 900;
+    font-size: 0.9em;
+}
+    
+#palette {
+    display: grid;
+    gap: 2px;
+    grid-auto-flow: row;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: repeat(6, 1fr);
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    width: 180px;
+    height: 1.75em;
+    border-radius: 5px;
+}
+
+.color {
+    border-radius: 3px;
+    border: #FFFFFFAA 0px solid;
+    transition: all 200ms;
+    cursor: pointer;
+}
+
+.color:hover {
+    border: #FFFFFF77 3px solid;
+}
+
+.color:active {
+    border: #FFFFFFFF 3px solid;
+    border-radius: 10em;
+}
+
+.colorClicked {
+    border: #FFFFFF77 3px solid;
+    border-radius: 10em;
+}
+
+.colorClicked:hover {
+    border: #FFFFFF77 3px solid;
+    border-radius: 10em;
+}
+
+#tools {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.dodge {
+    cursor: pointer;
+    color: black;
+    background-color: white;
+    border: black 3px solid;
+    border-radius: 5px;
+    transition: all 200ms;
+    font-weight: 900;
+    width: calc(180px / 3);
+    height: calc(2em + 2px);
+}
+
+.dodge:hover {
+    font-weight: 900;
+    color: #777777;
+    border: #777777 3px solid;
+}
+
+.dodge:active {
+    background-color: white;
+    color: dodgerblue;
+    border: dodgerblue 3px solid;
+    font-weight: 900;
+}
+
+.dodgeClicked {
+    background-color: white;
+    color: dodgerblue;
+    border: dodgerblue 3px solid;
+    font-weight: 900;
+}
+
+.dodgeClicked:hover {
+    color: dodgerblue;
+    border: dodgerblue 3px solid;
+    font-weight: 900;
+}
+
+.burn {
+    cursor: pointer;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    transition: all 200ms;
+    font-weight: 900;
+    width: calc(180px / 3);
+    height: calc(2em + 2px);
+}
+
+.burn:hover {
+    font-weight: 900;
+    background-color: #777777;
+}
+
+.burn:active {
+    background-color: dodgerblue;
+}
+
+.burnClicked {
+    background-color: dodgerblue;
+}
+
+.burnClicked:hover {
+    background-color: dodgerblue;
+}
+
+.random {
+    cursor: pointer;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    transition: all 200ms;
+    font-weight: 900;
+    width: calc(180px / 1.6);
+    height: calc(2em + 2px);
+}
+
+.random:hover {
+    border: #00000077 2px solid;
+}
+
+.random:active {
+    border: dodgerblue 3px solid;
+}
+
+.randomClicked {
+    border: dodgerblue 3px solid;
+}
+
+.randomClicked:hover {
+    border: dodgerblue 3px solid;
+}
