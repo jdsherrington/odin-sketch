@@ -1,6 +1,7 @@
 let width = 700,
     resolution = 16,
-    drawMode = false,
+    draw = false,
+    drawMode = "paint",
     sketchPad = document.querySelector('#sketchpad'),
     colorPalette = document.querySelector('#palette'),
     pixels,
@@ -22,6 +23,7 @@ let width = 700,
     burn = false,
     random = false;
 const fillBtn = document.querySelector('#fillBtn'),
+      eraseBtn = document.querySelector('.erase'),
       dodgeBtn = document.querySelector('.dodge'),
       burnBtn = document.querySelector('.burn'),
       randomBtn = document.querySelector('.random');
@@ -62,7 +64,7 @@ function createColors() {
     let numColors = colors.length+1;
     console.log(numColors);
 
-    colorPalette.setAttribute('style', 'width: '+(numColors*14)+'px; grid-template-columns: repeat('+(numColors/2)+', 1fr); grid-template-rows: repeat(2, 1fr);');
+    colorPalette.setAttribute('style', 'width: '+(numColors*10)+'px; grid-template-columns: repeat('+(numColors/2)+', 1fr); grid-template-rows: repeat(2, 1fr);');
 
     colors.forEach((color) => {
         const newColor = document.createElement('div');
@@ -74,12 +76,10 @@ function createColors() {
     });
     colorTile = document.querySelectorAll('.color');
     colorTile.forEach((colorTile) => {
-        colorTile.addEventListener('click', function (c) {
-            clearColor();
-            currentColor = c.target.id;
-            c.target.classList.add('colorClicked');
-            disableDodgeBurnRandom();
-            lightenColor(currentColor);
+        colorTile.addEventListener('click', function (e) {
+            clearMode();
+            currentColor = e.target.id;
+            e.target.classList.add('colorClicked');
         });
     });
 };
@@ -88,6 +88,15 @@ function clearColor() {
     colorTile.forEach((colorTile) => {
         colorTile.classList.remove('colorClicked');
     });
+};
+
+function clearMode() {
+    drawMode = "paint";
+    eraseBtn.classList.remove('eraseClicked');
+    dodgeBtn.classList.remove('dodgeClicked');
+    burnBtn.classList.remove('burnClicked');
+    randomBtn.classList.remove('randomClicked');
+    clearColor();
 };
 
 function lightenColor(col) {
@@ -126,22 +135,68 @@ function randColor() {
 };
 
 function startDrawing() {
-    drawMode = true;
+    draw = true;
 };
 
 function stopDrawing() {
-    drawMode = false;
+    draw = false;
 };
 
 function pixelDraw() {
     pixels = document.querySelectorAll('.pixel');
     pixels.forEach((pixels) => {
         pixels.addEventListener('mouseover', function (e) {
-            if (drawMode == false) {
-                console.log(drawMode);
+            if (draw == false) {
+                return;
+            }
+            console.log(draw);
+            switch (drawMode) {
+                case "paint":
+                    e.target.style.backgroundColor = currentColor;
+                    e.target.classList.add('noBorder');
+                    break;
+                case "erase":
+                    e.target.style.backgroundColor = ""
+                    e.target.classList.remove('noBorder');
+                    break;
+                case "dodge":
+                    if (e.target.style.backgroundColor == "") {
+                        break;
+                    }
+                    currentColor = lightenColor(e.target.style.backgroundColor);
+                    e.target.style.backgroundColor = currentColor;
+                    e.target.classList.add('noBorder');
+                    break;
+                case "burn":
+                    if (e.target.style.backgroundColor == "") {
+                        break;
+                    }
+                    currentColor = darkenColor(e.target.style.backgroundColor);
+                    e.target.style.backgroundColor = currentColor;
+                    e.target.classList.add('noBorder');
+                    break;
+                case "random":
+                    currentColor = randColor();
+                    while (e.target.style.backgroundColor == currentColor) {
+                        currentColor = randColor();
+                        if (e.target.style.backgroundColor != currentColor) {
+                            break;
+                        }
+                    }
+                    e.target.classList.add('noBorder');
+                    e.target.style.backgroundColor = currentColor;
+                    break;
+            }
+           
+           
+            /* if (draw == false) {
+                console.log(draw);
                 return;
             } else {
-                console.log(drawMode);
+                console.log(draw);
+                if (e.target.style.backgroundColor == "") {
+                    return;
+                }
                 if (dodge == true) {
                     if (e.target.style.backgroundColor == "") {
                         return;
@@ -168,36 +223,51 @@ function pixelDraw() {
                 }
                 e.target.style.backgroundColor = currentColor;
                 e.target.style.border = '#eee 0px solid';
-            };
+            }; */
         });
-        pixels.addEventListener('mousedown', function (c) {
-                console.log(drawMode);
-                if (dodge == true) {
-                    if (c.target.style.backgroundColor == "") {
-                        return;
+        pixels.addEventListener('mousedown', function (e) {
+            startDrawing();
+            if (draw == false) {
+                return;
+            }
+            console.log(draw);
+            switch (drawMode) {
+                case "paint":
+                    e.target.style.backgroundColor = currentColor;
+                    e.target.classList.add('noBorder');
+                    break;
+                case "erase":
+                    e.target.style.backgroundColor = ""
+                    e.target.classList.remove('noBorder');
+                    break;
+                case "dodge":
+                    if (e.target.style.backgroundColor == "") {
+                        break;
                     }
-                    console.log(c.target.style.backgroundColor);
-                    currentColor = lightenColor(c.target.style.backgroundColor);
-                }
-                if (burn == true) {
-                    if (c.target.style.backgroundColor == "") {
-                        return;
+                    currentColor = lightenColor(e.target.style.backgroundColor);
+                    e.target.style.backgroundColor = currentColor;
+                    e.target.classList.add('noBorder');
+                    break;
+                case "burn":
+                    if (e.target.style.backgroundColor == "") {
+                        break;
                     }
-                    console.log(c.target.style.backgroundColor);
-                    currentColor = darkenColor(c.target.style.backgroundColor);
-                }
-                if (random == true) {
-                    console.log(c.target.style.backgroundColor);
+                    currentColor = darkenColor(e.target.style.backgroundColor);
+                    e.target.style.backgroundColor = currentColor;
+                    e.target.classList.add('noBorder');
+                    break;
+                case "random":
                     currentColor = randColor();
-                    while (c.target.style.backgroundColor == currentColor) {
+                    while (e.target.style.backgroundColor == currentColor) {
                         currentColor = randColor();
-                        if (c.target.style.backgroundColor != currentColor) {
+                        if (e.target.style.backgroundColor != currentColor) {
                             break;
                         }
                     }
-                }
-                c.target.style.backgroundColor = currentColor;
-                c.target.style.border = '#eee 0px solid';
+                    e.target.classList.add('noBorder');
+                    e.target.style.backgroundColor = currentColor;
+                    break;
+            }
         });
     });
 };
@@ -207,55 +277,43 @@ function preventDrag(event) {
     event.preventDefault();
 }
 
-fillGrid();
+function enableErase() {
+    clearMode();
+    drawMode = "erase";
+    eraseBtn.classList.add('eraseClicked');
+    return;
+}
 
 function enableDodge() {
-    dodge = true;
-    burn = false;
-    random = false;
-    clearColor();
+    clearMode();
+    drawMode = "dodge";
     dodgeBtn.classList.add('dodgeClicked');
-    burnBtn.classList.remove('burnClicked');
-    randomBtn.classList.remove('randomClicked');
     return;
 }
 
 function enableBurn() {
-    dodge = false;
-    burn = true;
-    random = false;
-    clearColor();
-    dodgeBtn.classList.remove('dodgeClicked');
+    clearMode();
+    drawMode = "burn";
     burnBtn.classList.add('burnClicked');
-    randomBtn.classList.remove('randomClicked');
     return;
 }
 
 function enableRandom() {
-    dodge = false;
-    burn = false;
-    random = true;
-    clearColor();
-    dodgeBtn.classList.remove('dodgeClicked');
-    burnBtn.classList.remove('burnClicked');
+    clearMode();
+    drawMode = "random";
     randomBtn.classList.add('randomClicked');
-    return;
-}
-
-function disableDodgeBurnRandom() {
-    dodgeBtn.classList.remove('dodgeClicked');
-    burnBtn.classList.remove('burnClicked');
-    randomBtn.classList.remove('randomClicked');
-    dodge = false;
-    burn = false;
-    random = false;
     return;
 }
 
 sketchPad.addEventListener('mousedown', startDrawing);
 sketchPad.addEventListener('mouseup', stopDrawing);
 sketchPad.addEventListener('mouseleave', stopDrawing);
+
 fillBtn.addEventListener('click', fillGrid);
+
+eraseBtn.addEventListener('click', enableErase);
 dodgeBtn.addEventListener('click', enableDodge);
 burnBtn.addEventListener('click', enableBurn);
 randomBtn.addEventListener('click', enableRandom);
+
+fillGrid();
